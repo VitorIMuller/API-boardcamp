@@ -1,0 +1,26 @@
+{
+  "name": "API-boardcamp",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VitorIMuller/API-boardcamp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VitorIMuller/API-boardcamp/issues"
+  },
+  "homepage": "https://github.com/VitorIMuller/API-boardcamp#readme",
+  "dependencies": {
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.3"
+  }
+}
