@@ -11,10 +11,15 @@ export async function getCategories(req, res) {
 }
 
 export async function postCategories(req, res) {
-    const category = req.body.name;
-    if (category.length === 0) res.sendStatus(400);
+    const { name } = req.body;
+    if (!name) res.sendStatus(400);
     try {
-        await connection.query(`INSERT INTO categories (name) VALUES ($1)`, [category]);
+        const categories = await connection.query(`SELECT * FROM categories`);
+
+        const categoryFind = categories.rows.find(category => category.name === name);
+        if (categoryFind) return res.sendStatus(409);
+
+        await connection.query(`INSERT INTO categories (name) VALUES ($1)`, [name]);
         res.sendStatus(201);
     } catch (error) {
         res.sendStatus(500);
