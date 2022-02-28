@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/VitorIMuller/API-boardcamp#readme",
   "dependencies": {
+    "joi": "^17.6.0",
     "nodemon": "^2.0.15",
     "pg": "^8.7.3"
   }
