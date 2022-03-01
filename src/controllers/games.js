@@ -30,3 +30,33 @@ export async function postGames(req, res) {
         res.sendStatus(500);
     }
 }
+
+
+export async function getGames(req, res) {
+
+    let sendGame = [];
+
+    try {
+
+        const games = (await connection.query(`
+        SELECT * FROM games
+        `)).rows;
+
+        for (const game of games) {
+            const { categoryId } = game;
+
+            let categoryName = await connection.query(`
+            SELECT name FROM categories WHERE id= $1
+            `, [categoryId])
+
+            categoryName = categoryName.rows[0].name;
+            sendGame.push({ ...game, categoryName });
+        }
+
+    } catch {
+        res.sendStatus(500);
+    }
+
+    res.send(sendGame);
+
+}
