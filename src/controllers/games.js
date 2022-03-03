@@ -33,30 +33,23 @@ export async function postGames(req, res) {
 
 
 export async function getGames(req, res) {
-
-    let sendGame = [];
-
     try {
-
-        const games = (await connection.query(`
-        SELECT * FROM games
-        `)).rows;
-
-        for (const game of games) {
-            const { categoryId } = game;
-
-            let categoryName = await connection.query(`
-            SELECT name FROM categories WHERE id= $1
-            `, [categoryId])
-
-            categoryName = categoryName.rows[0].name;
-            sendGame.push({ ...game, categoryName });
+        const name = `%${req.query.name}%`
+        let games;
+        
+        if (name.length != 0) {
+            games = await connection.query(`
+                SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id 
+                WHERE  games.name LIKE $1
+            `, [name]);
+        } else {
+            games = await connection.query(`
+            SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id
+            `);
+            
         }
-
+        res.send(games.rows)
     } catch {
         res.sendStatus(500);
     }
-
-    res.send(sendGame);
-
 }

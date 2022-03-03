@@ -3,7 +3,7 @@ const { Pool } = pg;
 
 
 const user = 'postgres';
-const password = 'Miao1109';
+const password = '123456';
 const host = 'localhost';
 const port = 5432;
 const database = 'boardcamp';
