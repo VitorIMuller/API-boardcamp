@@ -25,12 +25,20 @@ export async function getCustomers(req, res){
             `, [`${cpf}%` ]);
             res.send(customers.rows)
         }else if(id){
+
+            const ids = await connection.query(`SELECT * FROM customers`);
             
-            let customers = await connection.query(`
-            SELECT * FROM customers WHERE id=$1
-            `, [id]);
+            const idFind = ids.rows.find(ids => ids.id === parseInt(id));
             
-            res.send(customers.rows)
+            if (!idFind) {
+                return res.sendStatus(404);
+            }else{
+                let customers = await connection.query(`
+                SELECT * FROM customers WHERE id=$1
+                `, [id]);
+                res.send(customers.rows)
+            }
+            
         } else{
             let customers = await connection.query(`SELECT * FROM customers`)
             res.send(customers.rows)
