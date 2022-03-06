@@ -30,8 +30,8 @@ export async function getGames(req, res) {
     try {
         const name = `%${req.query.name}%`
         let games;
-        
-        if (name.length != 0) {
+
+        if (!name) {
             games = await connection.query(`
                 SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id 
                 WHERE  games.name LIKE $1
@@ -40,7 +40,7 @@ export async function getGames(req, res) {
             games = await connection.query(`
             SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id
             `);
-            
+
         }
         res.send(games.rows)
     } catch {

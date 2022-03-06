@@ -11,7 +11,7 @@ export async function getCategories(req, res) {
 
 export async function postCategories(req, res) {
     const { name } = req.body;
-    if (!name) res.sendStatus(400);
+    if (!name) return res.sendStatus(400);
     try {
         const categories = await connection.query(`SELECT * FROM categories`);
 
