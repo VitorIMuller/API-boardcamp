@@ -1,5 +1,6 @@
 import connection from "../database.js";
 import dayjs from "dayjs";
+import { format, differenceInDays } from "date-fns";
 
 export async function postRentals(req, res) {
     const { customerId, gameId, daysRented } = req.body
@@ -126,4 +127,19 @@ export async function getRentals(req, res) {
     }
 
 
+}
+
+export async function finalizeRent(req, res) {
+    const { id } = req.params;
+    const today = format(new Date(), 'yyyy-MM-dd');
+
+    const checkFee = await connection.query(`
+    SELECT * FROM rentals WHERE id=$1
+    `, [id])
+    if (!checkFee) return res.sendStatus(404);
+    if (checkFee.rows[0].returnDate) return res.sendStatus(400)
+
+    const delayFee = diferenceResult > checkFee.rows[0].daysRented ? (diferenceResult - checkFee.rows[0].daysRented) * (checkFee.rows[0].originalPrice / checkFee.rows[0].daysRented) : "0";
+    await connection.query('UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3', [today, delayFee, id]);
+    res.sendStatus(200);
 }
