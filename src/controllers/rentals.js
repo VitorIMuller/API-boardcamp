@@ -18,17 +18,16 @@ export async function postRentals(req, res) {
             return res.send("Jogo esgotado").status(400)
         }
 
-        const rentalFormat = {
-            customerId,
-            gameId,
-            daysRented,
-            rentDate: dayjs().format('YYYY-MM-DD'),
-            returnDate: null,
-            originalPrice: daysRented * game.rows[0].pricePerDay,
-            delayFee: null
-        }
+        let rentDate = dayjs().format('YYYY-MM-DD')
+        let returnDate = null;
+        let originalPrice = daysRented * game.rows[0].pricePerDay
+        let delayFee = null;
 
-
+        await connection.query(`
+                INSERT INTO
+                rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
+                VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee]);
 
         res.sendStatus(201)
 
