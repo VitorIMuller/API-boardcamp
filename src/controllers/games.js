@@ -31,7 +31,7 @@ export async function getGames(req, res) {
         const name = `%${req.query.name}%`
         let games;
 
-        if (!name) {
+        if (name) {
             games = await connection.query(`
                 SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId" = categories.id 
                 WHERE  games.name LIKE $1
