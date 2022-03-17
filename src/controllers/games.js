@@ -2,6 +2,8 @@ import connection from "../database.js";
 
 export async function postGames(req, res) {
     const { name, image, stockTotal, categoryId, pricePerDay } = req.body;
+    if (stockTotal <= 0 || pricePerDay <= 0) return res.sendStatus(400);
+
 
     try {
         const ids = await connection.query(`SELECT id FROM categories`)
@@ -21,6 +23,7 @@ export async function postGames(req, res) {
 
         res.sendStatus(201);
     } catch (error) {
+        console.log(error.message)
         res.sendStatus(500);
     }
 }
@@ -28,7 +31,7 @@ export async function postGames(req, res) {
 
 export async function getGames(req, res) {
     try {
-        const name = `%${req.query.name}%`
+        const name = `${req.query.name}%`
         let games;
 
         if (name) {
@@ -42,8 +45,9 @@ export async function getGames(req, res) {
             `);
 
         }
-        res.send(games.rows)
-    } catch {
+        return res.send(games.rows)
+    } catch (error) {
+        console.log(error.message)
         res.sendStatus(500);
     }
 }

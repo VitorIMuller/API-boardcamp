@@ -22,7 +22,8 @@ export async function validateCheckOutRental(req, res, next) {
 
         next();
 
-    } catch {
+    } catch (error) {
+        console.log(error.message)
         res.sendStatus(500)
     }
 }

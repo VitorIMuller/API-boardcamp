@@ -1,6 +1,5 @@
 import connection from "../database.js";
 import dayjs from "dayjs";
-import { format, differenceInDays } from "date-fns";
 
 export async function postRentals(req, res) {
     const { customerId, gameId, daysRented } = req.body
@@ -34,15 +33,15 @@ export async function postRentals(req, res) {
 
         res.sendStatus(201)
 
-    } catch {
+    } catch (error) {
+        console.log(error.message)
         res.sendStatus(500);
     }
 }
 
 export async function getRentals(req, res) {
 
-    const { customerId } = req.query;
-    const { gameId } = req.query;
+    const { customerId, gameId } = req.query;
 
     if (customerId) {
         let rentals = await connection.query(`
@@ -70,7 +69,7 @@ export async function getRentals(req, res) {
 
             res.send(rentals);
         } else {
-            res.send("Não existe aluguel deste usuario")
+            res.send("Não existe aluguel deste usuario").status(404)
         }
 
 
@@ -165,7 +164,8 @@ export async function deleteRental(req, res) {
         }
         await connection.query('DELETE FROM rentals WHERE id = $1', [id]);
         res.sendStatus(200);
-    } catch {
+    } catch (error) {
+        console.log(error.message)
         res.sendStatus(500)
     };
 }
